@@ -6,6 +6,11 @@ jobs:
     build:
         runs-on: ubuntu-latest
 
+        defaults:
+            run:
+                working-directory: 04-using-actions/react-app
+
+
         # 0. Checkout the code from the repository
         # 1. Install deps for our react application
         # 2. Execute automated tests
@@ -18,8 +23,9 @@ jobs:
               with:
                 node-version: '20.x'
             - name: Install Dependencies
-              working-directory: 04-using-actions/react-app
               run: npm ci
+            - name: Run Unit Tests
+              run: npm run test
 
 
 
