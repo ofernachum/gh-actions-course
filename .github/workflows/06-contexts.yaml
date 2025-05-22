@@ -1,7 +1,8 @@
 name: 06 - Contexts
-run-name: ${{}}
 
-on: push
+on:
+    push:
+    workflow_dispatch:
 
 jobs:
     echo-data:
@@ -19,6 +20,6 @@ jobs:
 
             - name: Retrive Variable
               run: |
-                echo "Variable value ${{ vars.May_VAR }}"
+                echo "Variable value ${{}}"
               
 
