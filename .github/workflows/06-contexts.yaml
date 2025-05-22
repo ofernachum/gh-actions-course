@@ -20,6 +20,6 @@ jobs:
 
             - name: Retrive Variable
               run: |
-# echo "Variable value ${{}}"
+                echo "Variable value ${{ vars.MY_VAR }}"
               
 
