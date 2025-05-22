@@ -43,5 +43,13 @@ jobs:
               env:
                 MY_Overwritten_VAR: 'Step'
               run: |
-                echo "My Overwritten VAR Value: ${{ env.MY_Overwritten_VAR }}" 
+                echo "My Overwritten VAR Value: ${{ env.MY_Overwritten_VAR }}"
+
+    echo_data2:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Prent ENV Variables as Shell Vars
+              run: |
+                echo "Shell Overwritten Var: $MY_Overwritten_VAR"
+
               
