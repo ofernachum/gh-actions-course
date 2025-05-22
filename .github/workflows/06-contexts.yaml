@@ -11,9 +11,19 @@ on:
                 type: boolean
                 default: false
 
+
+env:
+    MY_Overwritten_VAR: 'Workflow'
+
+
 jobs:
+
     echo-data:
         runs-on: ubuntu-latest
+
+        env:
+            MY_Overwritten_VAR: 'Job'
+
         steps:
             - name: Display information
               run: |
@@ -28,5 +38,11 @@ jobs:
             - name: Retrive Variable
               run: |
                 echo "Variable value: ${{ vars.MY_VAR }}"
+
+            - name: Overwritten VAR
+              env:
+                MY_Overwritten_VAR: 'Step'
+              run: |
+                echo "My Overwritten VAR Value: ${{ vars.MY_Overwritten_VAR }}" 
               
 
