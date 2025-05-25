@@ -5,7 +5,6 @@ on:
     workflow_dispatch:
 
 
-
 jobs:
     echo1:
         runs-on: ubuntu-latest
@@ -13,7 +12,6 @@ jobs:
             
             - name: Print PR Title
               run: echo "${{ github.event.pull_request.title }}"
-
 
             - name: Print PR Labels
               run: |

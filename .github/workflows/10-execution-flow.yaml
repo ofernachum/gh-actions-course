@@ -1,0 +1,64 @@
+name: 10 - Execution Flow
+on:
+    workflow_dispatch:
+        inputs:
+            # Simulating Unit Test resultes:
+            pass-unit-tests:
+                description: Uinit Tests Passed ?
+                type: boolean
+                default: true
+
+jobs:
+    lint-build:
+        runs-on: ubumtu-latest
+        steps:
+            - name: Lint and Build
+              run: echo "Linting and building the Project" 
+
+    unit-tests:
+        runs-on: ubumtu-latest
+        steps:
+            - name: Running unit tests
+              run: echo "Running Tests"
+            - name: Failing Tests
+              if: ${{ !inputs.pass-unit-tests }}
+              run: exit 1
+    
+    deploy-nonprod:
+        runs-on: ubumtu-latest
+        needs:
+            - lint-build
+            - unit-tests
+        steps:
+            - name: Deploy to nonprod
+              run: echo "Deploying to nonprod"
+
+    e2e-tests:
+        runs-on: ubumtu-latest
+        needs:
+            - deploy-nonprod
+        steps:
+            - name: Running E2E Tests
+              run: echo "Running E2E tests"
+
+    load-tests:
+        runs-on: ubumtu-latest
+        needs:
+            - deploy-nonprod
+        steps:
+            - name: Running Load Tests
+              run: echo "Running Load tests"
+
+    deploy-prod:
+        runs-on: ubumtu-latest
+        needs:
+            - e2e-tests
+            - load-tests
+        steps:
+            - name: Deploy to Production
+              run: echo "Deploying to Production ..."
+
+    
+
+
+
