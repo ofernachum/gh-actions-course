@@ -10,13 +10,13 @@ on:
 
 jobs:
     lint-build:
-        runs-on: ubumtu-latest
+        runs-on: ubuntu-latest
         steps:
             - name: Lint and Build
               run: echo "Linting and building the Project" 
 
     unit-tests:
-        runs-on: ubumtu-latest
+        runs-on: ubuntu-latest
         steps:
             - name: Running unit tests
               run: echo "Running Tests"
@@ -25,7 +25,7 @@ jobs:
               run: exit 1
     
     deploy-nonprod:
-        runs-on: ubumtu-latest
+        runs-on: ubuntu-latest
         needs:
             - lint-build
             - unit-tests
@@ -34,7 +34,7 @@ jobs:
               run: echo "Deploying to nonprod"
 
     e2e-tests:
-        runs-on: ubumtu-latest
+        runs-on: ubuntu-latest
         needs:
             - deploy-nonprod
         steps:
@@ -42,7 +42,7 @@ jobs:
               run: echo "Running E2E tests"
 
     load-tests:
-        runs-on: ubumtu-latest
+        runs-on: ubuntu-latest
         needs:
             - deploy-nonprod
         steps:
@@ -50,7 +50,7 @@ jobs:
               run: echo "Running Load tests"
 
     deploy-prod:
-        runs-on: ubumtu-latest
+        runs-on: ubuntu-latest
         needs:
             - e2e-tests
             - load-tests
