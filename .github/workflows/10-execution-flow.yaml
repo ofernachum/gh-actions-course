@@ -7,14 +7,13 @@ on:
                 description: Uinit Tests Passed ?
                 type: boolean
                 default: true
-
 jobs:
     lint-build:
         runs-on: ubuntu-latest
+        continue-on-error: true
         steps:
             - name: Lint and Build
               run: echo "Linting and building the Project" 
-
     unit-tests:
         runs-on: ubuntu-latest
         steps:
@@ -22,8 +21,7 @@ jobs:
               run: echo "Running Tests"
             - name: Failing Tests
               if: ${{ !inputs.pass-unit-tests }}
-              run: exit 1
-    
+              run: exit 1 
     deploy-nonprod:
         runs-on: ubuntu-latest
         needs:
