@@ -1,0 +1,28 @@
+name: 15 - Working with Matrices
+
+on:
+    workflow_dispatch:
+
+
+jobs:
+    backwards-compatibility:
+        name: ${{ matrix.os }}-${{ matrix.node-version }}
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                node-version: [18.x, 20.x, 21.x]
+                os:
+                    - ubuntu-latest
+                    - windows-latest
+            
+        steps:
+            - name: Setup Node
+              uses: actions/setup-node@3
+              with:
+                ${{ matrix.node-version }}
+
+            - name: Perform some tests
+              run: echo "Running Tests on OS: ${{ matrix.os }} and Node Version: ${{ matrix.node-version }}"
+
+
+
