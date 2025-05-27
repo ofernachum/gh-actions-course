@@ -9,21 +9,47 @@ jobs:
         name: ${{ matrix.os }}-${{ matrix.node-version }}
         runs-on: ubuntu-latest
         strategy:
+            # If false - when one job fails the others will continue.
+            # Default is true - means all jobs after a failed one will be canceled !
+            fail-fast: false 
             matrix:
                 node-version: [18.x, 20.x, 21.x]
                 os:
                     - ubuntu-latest
                     - windows-latest
-            
+                
+                # includ enable us to change matix behaiviour in 2 ways:
+                
+                include:
+                    # 1. Add a combination that is not in the matrix combinations
+                    - os: ubuntu-latest
+                      node-version: 16.x
+                    
+                    # 2. Do something with one of the combinations. e.g. add a tag that is accessed later ...
+                    - os: ubuntu-latest
+                      node-version: 21.x
+                      tag: experimental
         steps:
             - name: Setup Node
               uses: actions/setup-node@v3
               with:
                 node-version: ${{ matrix.node-version }}
+            
+            # Here we access the tag defined in the include section above:
+            - name: Fail if Experimental
+              if: matrix.tag == 'experimental'
+              run: exit 1
+
 
             - name: Perform some tests
               run: |
                 echo "Running Tests on OS: ${{ matrix.os }} and Node Version: ${{ matrix.node-version }}"
+                sleep 10
+
+            - name: Upload Test Results
+              run: echo "Uploading test results"
+
+
 
 
 
