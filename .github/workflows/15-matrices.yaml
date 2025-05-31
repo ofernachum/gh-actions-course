@@ -61,7 +61,7 @@ jobs:
           include:
             # This will add a combination and will NOT override any other Matrix combinations
             - color: red
-              shapes: triangle
+              shape: triangle
 
       steps:
         - name: Dummy Steps
