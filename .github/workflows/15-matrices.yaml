@@ -49,6 +49,30 @@ jobs:
             - name: Upload Test Results
               run: echo "Uploading test results"
 
+    include-example:
+      name: ${{matirix.color}}-${{ matrix.shape }}-${{ matrix.size }}
+      runs-on: ubuntu-latest
+      strategy:
+        matrix:
+          color: [red, green]
+          shape: [circle, square]
+          size: [small, large]
+
+          include:
+            # This will add a combination and will NOT override any other Matrix combinations
+            - color: red
+              shapes: triangle
+
+            
+
+
+
+
+      
+        
+
+    
+
 
 
 
