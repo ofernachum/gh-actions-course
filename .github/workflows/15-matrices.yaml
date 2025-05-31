@@ -50,7 +50,7 @@ jobs:
               run: echo "Uploading test results"
 
     include-example:
-      name: ${{matirix.color}}-${{ matrix.shape }}-${{ matrix.size }}
+      name: ${{ matrix.color }}-${{ matrix.shape }}-${{ matrix.size }}
       runs-on: ubuntu-latest
       strategy:
         matrix:
