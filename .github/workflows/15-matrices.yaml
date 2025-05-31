@@ -36,9 +36,9 @@ jobs:
                 node-version: ${{ matrix.node-version }}
             
             # Here we access the tag defined in the include section above:
-            - name: Fail if Experimental
-              if: matrix.tag == 'experimental'
-              run: exit 1
+            #- name: Fail if Experimental
+            # if: matrix.tag == 'experimental'
+            #  run: exit 1
 
 
             - name: Perform some tests
@@ -65,7 +65,15 @@ jobs:
             # Adding a new matrix category will add it to all other matrix combinations
             - opacity: 50
             
-            # The following combinations will be added but will override existing combinations:
+            # Overriding:
+            #------------
+            # Partial Matches will be added
+            # Complete matches will override
+            # The Order is sensetive !
+            # The following combinations will be added but will override existing combinations.
+            # Meaning every combination with red will get always opacity of 75
+            # and circles will always have opacity of 100.
+
             - color: red
               opacity: 75
             - shape: circle
