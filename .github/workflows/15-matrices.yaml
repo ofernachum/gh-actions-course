@@ -63,7 +63,7 @@ jobs:
             - color: red
               shape: triangle
 
-            # Adding a new matrix category will add it to all other matrix combinations:
+            # Adding a new matrix category will add it to all other matrix combinations
             - opacity: 50
 
       steps:
