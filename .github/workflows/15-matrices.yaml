@@ -50,7 +50,7 @@ jobs:
               run: echo "Uploading test results"
 
     include-example:
-      name: ${{ matrix.color }}-${{ matrix.shape }}-${{ matrix.size }}
+      name: ${{ matrix.color }}-${{ matrix.shape }}-${{ matrix.size }}-${{ matrix.opacity }}
       runs-on: ubuntu-latest
       strategy:
         matrix:
@@ -63,9 +63,12 @@ jobs:
             - color: red
               shape: triangle
 
+            # Adding a new matrix category will add it to all other matrix combinations:
+            - opacity: 50
+
       steps:
         - name: Dummy Steps
-          run: echo "${{ matrix.color }}-${{ matrix.shape }}-${{ matrix.size }}"
+          run: echo "${{ matrix.color }}-${{ matrix.shape }}-${{ matrix.size }}-${{ matrix.opacity }}"
       
 
         
