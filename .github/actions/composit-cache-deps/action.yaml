@@ -1,0 +1,8 @@
+name: Cache Node and NPM Dependencies
+description: This action allows to cache both Node and NPM deps based on the package-lock.json file.
+
+runs:
+  using: composite
+
+
+
