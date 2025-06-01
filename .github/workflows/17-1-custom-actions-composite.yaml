@@ -27,7 +27,7 @@ jobs:
                 # Pussing Input variables to the custom action:
                 node-version: 20.x
                 # Need to use here again as this is not a run command:
-                working-directory: ${{ env.working-directory }}
+                working-dir: ${{ env.working-directory }}
 
             - name: Test
               run: npm run test
