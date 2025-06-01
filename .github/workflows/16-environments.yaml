@@ -1,0 +1,31 @@
+name: 16 - Using Environments
+
+on:
+    workflow_dispatch:
+        inputs:
+            target-env:
+                type: environment
+                default: staging
+
+
+
+
+jobs:
+    echo:
+        runs-on: ubuntu-latest
+        environment: ${{ inputs.target-env }}
+        env:
+            # Get the vars.MY_ENV_VALUE from the selected Environmemt and if not defined set a default value:
+            my-env-value: ${{ vars.MY_ENV_VALUE || 'default_value' }}
+
+        steps:
+            - name: Echo vars
+              run: |
+                echo "Env variable: ${{ env.my-env-value }}"
+
+
+
+
+
+
+
