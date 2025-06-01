@@ -11,6 +11,13 @@ inputs:
     description: Application working directory
     default: '.'
     required: false
+  target-env:
+    description: Controlles wheather dev deps are installed
+    default: dev
+    required: false
+
+  
+
 
 
 runs:
@@ -30,11 +37,18 @@ runs:
         key: node-modules-${{ hashFiles(format('{0}/{1}', inputs.working-dir, 'package-lock.json')) }}
     
     - name: Install Dependencies
-      if: ${{ steps.cache.outputs.cache-hit != 'true' }}
-      run: npm ci
+      # Dependencies will be installed only if not allready on cache:
+      if: ${{ steps.cache.outputs.cache-hit != 'true'}}
+      # Then, this checks if the target environment is dev and will install deps. If not - it will not install dev dependencies !
+      run: ${{ inputs.target-env == 'dev' && 'npm ci' || 'npm ci --omit=dev' }}
       # Required to indicate a shell and working dir when running a step in composite custom action:
       shell: bash
       working-directory: ${{ inputs.working-dir }}
+
+  
+
+
+
 
     
 

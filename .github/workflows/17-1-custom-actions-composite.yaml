@@ -1,7 +1,18 @@
-name: 17 - Custom Actions - Composite
+name: 17 - 1 - Custom Actions - Composite
+run-name: 17 - 1 - Custom Actions - Composite | env -  ${{ inputs.target-env }}
 
 on:
-    workflow_dispatch
+    workflow_dispatch:
+        inputs:
+            target-env:
+                description: Target Environmnet
+                type: choice
+                options:
+                    - dev
+                    - prod
+
+                
+
 
 env:
     working-directory: 17-Custom-Actions/react-app
@@ -28,6 +39,8 @@ jobs:
                 node-version: 20.x
                 # Need to use here again as this is not a run command:
                 working-dir: ${{ env.working-directory }}
+                # Takes the target invironment to determin if to install Dev dependencies:
+                target-env: ${{ inputs.target-env }}
 
             - name: Test
               run: npm run test
