@@ -1,0 +1,43 @@
+name: 17 - Custom Actions - Composite
+
+on:
+    workflow_dispatch
+
+env:
+    working-directory: 17-Custom-Actions/react-app
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        defaults:
+            # Define default working directory for all run commands.
+            run:
+                working-directory: ${{ env.working-directory }}
+
+        steps:
+            # To allow this workflow to use custom action defind in the current repo we must use the checkout action first:
+            
+            - name: Checkout Code
+              uses: actions/checkout@v4
+            
+            - name: Setup Node and NPM Deps
+              # Relative path to the custom action folder:
+              uses: ./.github/actions/composite-cache-deps
+              with:
+                # Pussing Input variables to the custom action:
+                node-version: 20.x
+                # Need to use here again as this is not a run command:
+                working-directory: ${{ env.working-directory }}
+
+            - name: Test
+              run: npm run test
+              
+
+            - name: Build
+              run: npm run build
+             
+
+
+
+
+            
