@@ -12,11 +12,6 @@ inputs:
     default: '.'
     required: false
 
-  
-
-  
-  
-
 
 runs:
   # This define the type of custom action:
@@ -31,8 +26,33 @@ runs:
       id: cache
       uses: actions/cache@v3
       with:
-        path: ${{ inputs.working-dir }}
+        path: ${{ inputs.working-dir }}/node_modules
+        key: node-modules-${{ hashFiles('${{ inputs.working-dir }}/package-lock.json') }}
+    
+    - name: Install Dependencies
+      if: ${{ steps.cache.outputs.cache-hit != 'true' }}
+      run: npm ci
+      # Required to indicate a shell and working dir when running a step in composite custom action:
+      shell: bash
+      working-directory: ${{ inputs.working-dir }}
+
+    
+
+    
+
+
+
+
+
+
+    
+
+
+
+
         
+        
+
 
     
 
