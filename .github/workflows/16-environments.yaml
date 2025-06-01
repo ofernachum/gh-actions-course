@@ -1,4 +1,5 @@
 name: 16 - Using Environments
+run-name: 16 - Using Environments | env - ${{ inputs.target-env }} 
 
 on:
     workflow_dispatch:
