@@ -1,7 +1,4 @@
-const core = require('@actions/core')
-async function run() {
-
-    /*
+/*
     1. Parse Inputs:
         1.1 base branch for which to chake for updates
         1.2 target-branch to use to create PR
@@ -14,8 +11,79 @@ async function run() {
         4.1 Add and commit files to the target-branch
         4.2 Create a PR to the base-branch using the oktokit API
     5. Otherwise conclude the custom action
-    */
+*/
 
+
+
+
+const core = require('@actions/core');
+const exec = require('@actions/exec');
+
+//This function checks if branchName contains only the following chars:
+const validateBranchName = ({ branchName }) => /^[a-zA-Z0-9_\-\.\/]+$/.test(branchName);
+
+//This function checks if directory contains only the following chars:
+const validateDirectoryName = ({ dirName }) => /^[a-zA-Z0-9_\-\/]+$/.test(dirName);
+
+
+
+
+async function run() {
+
+    const baseBranch = core.getInput('base-branch');
+    const targetBranch = core.getInput('target-branch');
+    const ghToken = core.getInput('gh-token');
+    const workingDir = core.getInput('working-directory');
+    const debug = core.getBooleanInput('debug');
+
+    //Will ensure the token is protected as secerete and not presented as clear text anywhare:
+    core.setSecret(ghToken);
+
+    
+    //Use validateBranchName to validate branch name:
+    if (!validateBranchName({ branchName: baseBranch })) {
+        // Return an error and fail the action if not valid !
+        core.setFailed('Invalid Base Branch Name !');
+        return;
+    }
+
+    if (!validateBranchName({ branchName: targetBranch })) {
+       // Return an error and fail the action if not valid !
+        core.setFailed('Invalid Target Branch Name !');
+        return;
+    }
+    //Use validateDirectoryName to validate Working Directory name:
+    if (!validateDirectoryName({ dirName: workingDir })) {
+        // Return an error and fail the action if not valid !
+        core.setFailed('Invalid Working Directory Name !');
+        return;
+    }
+
+    // Print to console:
+    core.info(`[js-dependency-update] : base branch is ${baseBranch}`)
+    core.info(`[js-dependency-update] : target branch is ${targetBranch}`)
+    core.info(`[js-dependency-update] : working directory is ${workingDir}`)
+
+    // Will execute the npm update command within the working directory:
+    await exec.exec('npm update', [], {
+        cwd: workingDir
+    });
+
+    // Check if package*.json files where changed by the npm update command:
+    const gitStatus = await exec.getExecOutput('git status -s package*.json', [], {
+        cwd: workingDir
+    })
+
+    //If the output of the previous command is grater than 0 it means there are updates available.
+    if (gitStatus.stdout.length > 0) {
+        core.info('[js-dependency-update] : There are updates available')
+    } else {
+        core.info('[js-dependency-update] : No updates at this point in time')
+    }
+
+
+
+    
      core.info('I am  a JS Action')
 
 

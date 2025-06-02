@@ -1,6 +1,30 @@
 name: Update NPM Dependencies
 description: Check if there are updates to NPM Packages, and creates a PR with the updated package*.json files.
 
+
+
+# The inputs that will be passed to the JS Action (index.js):
+inputs:
+  base-branch:
+    description: The branch used as the base for the dependency update checks
+    default: main
+    required: false
+  target-branch:
+    description: The brach from which the PR is created 
+    default: update-dependencies
+    required: false
+  working-directory:
+    description: The working directory of the project to check for dependencies
+    required: true
+  gh-token:
+    descrioption: Authentication token with repo access - Write + PRs
+    required: true
+  debug:
+    description: Whether to output debug messages to the consule
+    default: 'false'
+
+
+
 runs:
   using: node20 # This is the custom action type for JS 
   main: index.js # Entry point for JS Action
