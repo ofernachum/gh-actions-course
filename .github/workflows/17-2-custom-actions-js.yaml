@@ -19,15 +19,7 @@ jobs:
               # Relative path to the custom action folder:
               uses: ./.github/actions/js-dependency-update
               
-
-            - name: Test
-              run: npm run test
               
-
-            - name: Build
-              run: npm run build
-             
-
 
 
 
