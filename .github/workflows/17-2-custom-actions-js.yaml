@@ -12,7 +12,7 @@ on:
                 default: update-dependencies
             working-dir:
                 type: string
-                default: 17-Custom-Actions\react-app
+                default: 17-Custom-Actions/react-app
 
 
 
