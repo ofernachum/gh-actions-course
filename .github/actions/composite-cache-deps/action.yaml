@@ -2,6 +2,8 @@ name: Cache Node and NPM Dependencies
 description: This action allows to cache both Node and NPM deps based on the package-lock.json file.
 
 
+# Define the inputs for the actions that needs to be provided when calling it from a workflow
+# using the action's "with:" sction:
 inputs:
   node-version:
     description: NodeJS version to use
@@ -15,14 +17,11 @@ inputs:
     description: Controlles wheather dev deps are installed
     default: dev
     required: false
-
-  
-
-
-
+# This holds the custom action's steps:
 runs:
   # This define the type of custom action:
   using: composite
+  
   steps:
     - name: Setup NodeJS Version ${{ inputs.node-version }}
       uses: actions/setup-node@v3
@@ -34,12 +33,19 @@ runs:
       uses: actions/cache@v3
       with:
         path: ${{ inputs.working-dir }}/node_modules
+        # Creating the cache key to be comprised of:
+        # The environment
+        # Working-Dir/package-lock.json
         key: node-modules-${{ inputs.target-env }}-${{ hashFiles(format('{0}/{1}', inputs.working-dir, 'package-lock.json')) }}
     
     - name: Install Dependencies
       # Dependencies will be installed only if not allready on cache:
       if: ${{ steps.cache.outputs.cache-hit != 'true'}}
-      # Then, this checks if the target environment is dev and will install deps. If not - it will not install dev dependencies !
+      # Then the are 2 options:
+      # 1. If Target Env is dev - install all dependencies using npm ci
+      # 2. Else (Target environment is prod) - install using the --omit=dev flag - skip development packages.
+
+      # In any case the filed will be cached eithr in full or --omit=dev version
       run: ${{ inputs.target-env == 'dev' && 'npm ci' || 'npm ci --omit=dev' }}
       # Required to indicate a shell and working dir when running a step in composite custom action:
       shell: bash

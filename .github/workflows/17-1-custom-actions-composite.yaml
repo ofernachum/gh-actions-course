@@ -3,6 +3,8 @@ run-name: 17 - 1 - Custom Actions - Composite | env -  ${{ inputs.target-env }}
 
 on:
     workflow_dispatch:
+        # Select the environment type to dictate the dependencis installation behaiviour
+        # This will be passed to the custom action created earlier.
         inputs:
             target-env:
                 description: Target Environmnet
@@ -35,7 +37,7 @@ jobs:
               # Relative path to the custom action folder:
               uses: ./.github/actions/composite-cache-deps
               with:
-                # Pussing Input variables to the custom action:
+                # Passing Input variables to the custom action:
                 node-version: 20.x
                 # Need to use here again as this is not a run command:
                 working-dir: ${{ env.working-directory }}
