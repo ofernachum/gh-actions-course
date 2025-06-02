@@ -1,11 +1,10 @@
 name: Update NPM Dependencies
 description: Check if there are updates to NPM Packages, and creates a PR with the updated package*.json files.
 
-using: node20 # This is the custom action type for JS 
-main: index.js # Entry point for JS Action
-
-
 runs:
+  using: node20 # This is the custom action type for JS 
+  main: index.js # Entry point for JS Action
+
 
 
 
