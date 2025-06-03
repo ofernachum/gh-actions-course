@@ -30,11 +30,18 @@ const validateDirectoryName = ({ dirName }) => /^[a-zA-Z0-9_\-\/]+$/.test(dirNam
 
 async function run() {
 
-    const baseBranch = core.getInput('base-branch');
-    const targetBranch = core.getInput('target-branch');
-    const ghToken = core.getInput('gh-token');
-    const workingDir = core.getInput('working-directory');
+    const baseBranch = core.getInput('base-branch', { required: true });
+    const targetBranch = core.getInput('target-branch', { required: true });
+    const ghToken = core.getInput('gh-token', { required: true });
+    const workingDir = core.getInput('working-directory', { required: true });
     const debug = core.getBooleanInput('debug');
+
+
+    // Options for exec commands used later on: 
+    const commonExecOpts = {
+        cwd: workingDir
+    }
+
 
     //Will ensure the token is protected as secerete and not presented as clear text anywhare:
     core.setSecret(ghToken);
@@ -66,17 +73,52 @@ async function run() {
 
     // Will execute the npm update command within the working directory:
     await exec.exec('npm update', [], {
-        cwd: workingDir
+        ...commonExecOpts
     });
 
     // Check if package*.json files where changed by the npm update command:
     const gitStatus = await exec.getExecOutput('git status -s package*.json', [], {
-        cwd: workingDir
-    })
+        ...commonExecOpts
+    });
 
-    //If the output of the previous command is grater than 0 it means there are updates available.
+    //If the output of the previous command is grater than 0 it means there are updates available nad
+    // initiate the PR logic:
+
     if (gitStatus.stdout.length > 0) {
-        core.info('[js-dependency-update] : There are updates available')
+        
+        core.info('[js-dependency-update] : There are updates available');
+        
+        // This for indicating that the commit had been performed by our GH automation:
+        await exec.exec(`git config --global user.name "gh-automation"`);
+        await exec.exec(`git config --global user.email "gh-automation@email.com"`);
+        
+        // Create and Checkout the target branch to which we will commit the changes:
+        await exec.exec(`git checkout -b ${targetBranch}`, [], {
+            ...commonExecOpts
+        });
+
+        // Stage the files to be commited (This are the pachage files we want to update)
+        await exec.exec(`git add package.json package-lock.jason`, [], {
+            ...commonExecOpts
+        });
+
+        // commit the changes into the target branch 
+        await exec.exec(`git commit -m "chore: Update Dependencies"`, [], {
+            ...commonExecOpts
+        });
+
+        //Push to remote repository.  
+        await exec.exec(`git push -u origin ${targetBranch} --force"`, [], {
+            ...commonExecOpts
+        });
+
+
+
+
+
+
+
+
     } else {
         core.info('[js-dependency-update] : No updates at this point in time')
     }

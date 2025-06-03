@@ -28,6 +28,7 @@ jobs:
             - name: Check for Dependency Updates
               # Relative path to the custom action folder:
               uses: ./.github/actions/js-dependency-update
+              # Pass the Inputs to the custom action
               with:
                 base-branch: ${{ inputs.base-branch }}
                 target-branch: ${{ inputs.target-branch }}
