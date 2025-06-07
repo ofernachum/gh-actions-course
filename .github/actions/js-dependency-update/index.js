@@ -15,9 +15,9 @@
 
 
 
-
-const core = require('@actions/core');
-const exec = require('@actions/exec');
+// Required Node Packages:
+const core = require('@actions/core'); //API for base GH Actions functionality:
+const exec = require('@actions/exec'); // For executing various git commands (cli)
 
 //This function checks if branchName contains only the following chars:
 const validateBranchName = ({ branchName }) => /^[a-zA-Z0-9_\-\.\/]+$/.test(branchName);
@@ -26,10 +26,8 @@ const validateBranchName = ({ branchName }) => /^[a-zA-Z0-9_\-\.\/]+$/.test(bran
 const validateDirectoryName = ({ dirName }) => /^[a-zA-Z0-9_\-\/]+$/.test(dirName);
 
 
-
-
 async function run() {
-
+    // Get the inputs:
     const baseBranch = core.getInput('base-branch', { required: true });
     const targetBranch = core.getInput('target-branch', { required: true });
     const ghToken = core.getInput('gh-token', { required: true });
@@ -49,19 +47,19 @@ async function run() {
     
     //Use validateBranchName to validate branch name:
     if (!validateBranchName({ branchName: baseBranch })) {
-        // Return an error and fail the action if not valid !
+        // Set the action as failed (action will be stopped), log an error message and return:
         core.setFailed('Invalid Base Branch Name !');
         return;
     }
 
     if (!validateBranchName({ branchName: targetBranch })) {
-       // Return an error and fail the action if not valid !
+       // Set the action as failed (action will be stopped), log an error message and return:
         core.setFailed('Invalid Target Branch Name !');
         return;
     }
     //Use validateDirectoryName to validate Working Directory name:
     if (!validateDirectoryName({ dirName: workingDir })) {
-        // Return an error and fail the action if not valid !
+        // Set the action as failed (action will be stopped), log an error message and return:
         core.setFailed('Invalid Working Directory Name !');
         return;
     }
@@ -81,7 +79,7 @@ async function run() {
         ...commonExecOpts
     });
 
-    //If the output of the previous command is grater than 0 it means there are updates available nad
+    // If the output of the previous command is grater than 0 it means there are updates available nad
     // initiate the PR logic:
 
     if (gitStatus.stdout.length > 0) {
@@ -98,6 +96,8 @@ async function run() {
         });
 
         // Stage the files to be commited (This are the pachage files we want to update)
+        // The previous npm update apdated the package.json package-lock.jason files with new versions of packages.
+        // So - we want to commit just those so when the application is built again it will use the updated dependencies.
         await exec.exec(`git add package.json package-lock.jason`, [], {
             ...commonExecOpts
         });
@@ -113,12 +113,6 @@ async function run() {
         });
 
 
-
-
-
-
-
-
     } else {
         core.info('[js-dependency-update] : No updates at this point in time')
     }
@@ -127,8 +121,6 @@ async function run() {
 
     
      core.info('I am  a JS Action')
-
-
 
 
 }
