@@ -17,6 +17,12 @@ on:
                 type: string
                 default: 17-Custom-Actions/react-app
 
+# Allow GITHUB_TOKEN to write to the repo and create pull requests (C20)
+permissions: 
+    contents: write
+    pull-requests: write
+
+
 
 
 jobs:
@@ -36,6 +42,13 @@ jobs:
                 base-branch: ${{ inputs.base-branch }}
                 target-branch: ${{ inputs.target-branch }}
                 working-directory: ${{ inputs.working-dir }}
+
+                # GITHUB_TOKEN is a GH Actions Variable holding full access for the workflow to the current repo.
+                # In GH Documentation this is called "Automatic token authentication".
+                # By default, GITHUB_TOKEN doesnt allow for PRs so we need to add those permissions in the above 'permissions' block (C20) ...
+                gh-token: ${{ secrets.GITHUB_TOKEN }}
+
+
               
 
 

@@ -18,6 +18,8 @@
 // Required Node Packages:
 const core = require('@actions/core'); //API for base GH Actions functionality:
 const exec = require('@actions/exec'); // For executing various git commands (cli)
+const github = required('@actions/github'); // Octokit API  - GitHub’s official JavaScript/TypeScript client
+
 
 //This function checks if branchName contains only the following chars:
 const validateBranchName = ({ branchName }) => /^[a-zA-Z0-9_\-\.\/]+$/.test(branchName);
@@ -30,7 +32,7 @@ async function run() {
     // Get the inputs:
     const baseBranch = core.getInput('base-branch', { required: true });
     const targetBranch = core.getInput('target-branch', { required: true });
-    const ghToken = core.getInput('gh-token', { required: false });
+    const ghToken = core.getInput('gh-token', { required: true });
     const workingDir = core.getInput('working-directory', { required: true });
     const debug = core.getBooleanInput('debug');
 
@@ -111,6 +113,33 @@ async function run() {
         await exec.exec(`git push -u origin ${targetBranch} --force"`, [], {
             ...commonExecOpts
         });
+
+        
+        // Declare octokit instance and pass the tocken:
+        const octokit = github.getOctokit(ghToken) 
+
+        try{
+
+             // Create the pull request: 
+            
+             await octokit.rest.pulls.creat({
+                
+                owner: github.context.repo.owner,
+                repo: github.context.repo.repo,
+                title: `Update NPM Dependencies`,
+                body: `This Pull Request updates NPM Packages`,
+                base: baseBranch,
+                head: targetBranch
+
+                });
+
+        } catch (e) {
+
+            core.error('[js-dependency-update] : Something went wrong while creating the PR. Check logs below.');
+            core.error(e.message);
+            core.setFailed(e);
+
+        }
 
 
     } else {
