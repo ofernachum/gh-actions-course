@@ -18,7 +18,7 @@
 // Required Node Packages:
 const core = require('@actions/core'); //API for base GH Actions functionality:
 const exec = require('@actions/exec'); // For executing various git commands (cli)
-const github = required('@actions/github'); // Octokit API  - GitHub’s official JavaScript/TypeScript client
+const github = require('@actions/github'); // Octokit API  - GitHub’s official JavaScript/TypeScript client
 
 
 //This function checks if branchName contains only the following chars:
