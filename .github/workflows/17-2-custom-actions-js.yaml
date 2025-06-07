@@ -5,12 +5,15 @@ on:
     workflow_dispatch:
         inputs:
             base-branch:
+                description: The base branch TO which we will merge updated packages
                 type: string
                 default: main
             target-branch:
+                description: The target branch FROM which we will merge updated packages
                 type: string
                 default: update-dependencies
             working-dir:
+                description: Working directiory of the react application
                 type: string
                 default: 17-Custom-Actions/react-app
 
