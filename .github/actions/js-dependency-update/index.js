@@ -122,7 +122,7 @@ async function run() {
 
              // Create the pull request: 
             
-             await octokit.rest.pulls.creat({
+             await octokit.rest.pulls.create({
                 
                 owner: github.context.repo.owner,
                 repo: github.context.repo.repo,
