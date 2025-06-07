@@ -23,8 +23,6 @@ permissions:
     pull-requests: write
 
 
-
-
 jobs:
     dependency-update:
         runs-on: ubuntu-latest
@@ -46,7 +44,7 @@ jobs:
                 # GITHUB_TOKEN is a GH Actions Variable holding full access for the workflow to the current repo.
                 # In GH Documentation this is called "Automatic token authentication".
                 # By default, GITHUB_TOKEN doesnt allow for PRs so we need to add those permissions in the above 'permissions' block (C20) ...
-                gh-token: ${{ secrets.GITHUB_TOKEN }}
+                gh-token: ${{ secrets.JS_ACTION_TOKEN }}
 
 
               
