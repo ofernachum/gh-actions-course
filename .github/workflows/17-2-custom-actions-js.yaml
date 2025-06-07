@@ -17,10 +17,10 @@ on:
                 type: string
                 default: 17-Custom-Actions/react-app
 
-# Allow GITHUB_TOKEN to write to the repo and create pull requests (C20)
-# permissions: 
-    #contents: write
-    #pull-requests: write
+# Allow JS_ACTION_TOKEN to write to the repo and create pull requests (C20)
+permissions: 
+    contents: write
+    pull-requests: write
 
 
 jobs:
