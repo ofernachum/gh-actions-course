@@ -98,7 +98,7 @@ async function run() {
         // Stage the files to be commited (This are the pachage files we want to update)
         // The previous npm update apdated the package.json package-lock.jason files with new versions of packages.
         // So - we want to commit just those so when the application is built again it will use the updated dependencies.
-        await exec.exec(`git add package.json package-lock.jason`, [], {
+        await exec.exec(`git add package.json package-lock.json`, [], {
             ...commonExecOpts
         });
 
