@@ -5,8 +5,20 @@ on:
         inputs:
             url:
                 description: Url 
-                type: string
-                default: https://www.google.com
+                type: choice
+                options:
+                  - https://www.google.com
+                  - https://www.googsdsdasdsfgdfg4le.com
+                  - invalid-formatQAZZWSXEDC
+
+            max_trails:
+                description: Maximum number of trails until action fails.
+                default: '10'
+                required: false
+            delay:
+              description: Delay in seconds between trails
+              default: '5'
+              required: false
               
         
 
@@ -26,6 +38,10 @@ jobs:
               # Pass the Inputs to the custom action
               with:
                 url: ${{ inputs.url }}
+                max_trails: ${{ inputs.max_trails }}
+                delay: ${{ inputs.delay }}
+
+          
 
 
 

@@ -17,6 +17,10 @@ inputs:
 
 runs:
   using: docker
+
+  # This will build the image from Dockerfile and run the cotainer.
+  # For large containers we would likr to take a prebuilt image from container registry.
+  
   image: Dockerfile
 
 
