@@ -57,6 +57,8 @@ const setupLogger = ({ debug, prefix } = { debug: false, prefix: ''}) => ({
 });
 
 
+
+
 // This is the main custom action function:
 async function run() {
     // Get the inputs:
@@ -195,5 +197,5 @@ async function run() {
 
 }
 
-
+run();
 
