@@ -40,20 +40,26 @@ const validateDirectoryName = ({ dirName }) => /^[a-zA-Z0-9_\-\/]+$/.test(dirNam
 // Declared in C40
 const setupLogger = ({ debug, prefix } = { debug: false, prefix: ''}) => ({
 
+  
     debug: (message) => {
-        core.info(`DEBUG ${ prefix }${ prefix ? ':' : '' }${message}`);
+
+        if (debug) { core.info(`DEBUG ${ prefix }${ prefix ? ':' : '' }${message}`);}
         // extend the logging funtionality here !
-    },
+        },
 
     info: (message) => {
 
-        core.info(`${ prefix }${ prefix ? ':' : '' }${message}`)
+        core.info(`${ prefix }${ prefix ? ':' : '' }${message}`);
 
     },
 
     error: (message) => {
         core.error(`${ prefix }${ prefix ? ':' : '' }${message}`);
     }
+
+
+    
+    
 });
 
 
