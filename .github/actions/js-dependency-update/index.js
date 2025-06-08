@@ -177,8 +177,11 @@ async function run() {
 
         } catch (e) {
 
+
             logger.error('Something went wrong while creating the PR. Check logs below.');
             logger.error(e.message);
+
+            core.error(e.message)
             core.setFailed(e);
 
         }
