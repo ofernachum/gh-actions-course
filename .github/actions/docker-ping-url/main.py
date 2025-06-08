@@ -14,7 +14,7 @@ def ping_url(url, delay, max_trails):
             
         except requests.ConnectionError:
             print(f"Website {url} is unreachable Retrying in {delay} seconds ...")
-            time.sleep()
+            time.sleep(delay)
             trails +=1
             
         except requests.exceptions.MissingSchema:
