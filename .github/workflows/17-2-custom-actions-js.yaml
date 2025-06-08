@@ -17,6 +17,13 @@ on:
                 type: string
                 default: 17-Custom-Actions/react-app
 
+            debug:
+                description: Toggels Debug mode
+                type: boolean
+                default: false
+
+
+
 # Allow JS_ACTION_TOKEN / or GITHUB_TOKEN to write to the repo and create pull requests (C20)
 permissions: 
     contents: write
@@ -40,6 +47,7 @@ jobs:
                 base-branch: ${{ inputs.base-branch }}
                 target-branch: ${{ inputs.target-branch }}
                 working-directory: ${{ inputs.working-dir }}
+                debug: ${{ inputs.debug }}
 
                 # JS_ACTION_TOKEN is a GH Actions Variable (Secret) holding a PAT with write permissions to the repo.
                 # See The corresponding Google Doc for instructions how to create this.

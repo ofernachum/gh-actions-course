@@ -20,6 +20,14 @@ const core = require('@actions/core'); //API for base GH Actions functionality:
 const exec = require('@actions/exec'); // For executing various git commands (cli)
 const github = require('@actions/github'); // Octokit API  - GitHub’s official JavaScript/TypeScript client
 
+// This function will be used to set up Git user to reflect the operation of this action
+// is done by automation (updating dependencies).
+// We call this function later at C101
+const setupGit = async () => {
+    await exec.exec(`git config --global user.name "gh-automation"`);
+    await exec.exec(`git config --global user.email "gh-automation@email.com"`);
+};
+
 
 //This function checks if branchName contains only the following chars:
 const validateBranchName = ({ branchName }) => /^[a-zA-Z0-9_\-\.\/]+$/.test(branchName);
@@ -27,7 +35,29 @@ const validateBranchName = ({ branchName }) => /^[a-zA-Z0-9_\-\.\/]+$/.test(bran
 //This function checks if directory contains only the following chars:
 const validateDirectoryName = ({ dirName }) => /^[a-zA-Z0-9_\-\/]+$/.test(dirName);
 
+// The following Logger function enable us to extend the loggin capabilities
+// to other tools ...
+// Declared in C40
+const setupLogger = ({ debug, prefix } = { debug: false, prefix: ''}) => ({
 
+    debug: (message) => {
+        core.info(`DEBUG ${ prefix }${ prefix ? ':' : '' }${message}`);
+        // extend the logging funtionality here !
+    },
+
+    info: (message) => {
+
+        core.info(`${ prefix }${ prefix ? ':' : '' }${message}`)
+
+    },
+
+    error: (message) => {
+        core.error(`${ prefix }${ prefix ? ':' : '' }${message}`);
+    }
+});
+
+
+// This is the main custom action function:
 async function run() {
     // Get the inputs:
     const baseBranch = core.getInput('base-branch', { required: true });
@@ -35,6 +65,9 @@ async function run() {
     const ghToken = core.getInput('gh-token', { required: true });
     const workingDir = core.getInput('working-directory', { required: true });
     const debug = core.getBooleanInput('debug');
+    
+    // Declare a logger defined earlier (C40)
+    const logger = setupLogger({debug, prefix: '[js-dependency-update]'});
 
 
     // Options for exec commands used later on: 
@@ -47,6 +80,8 @@ async function run() {
     core.setSecret(ghToken);
 
     
+    logger.debug('Validating Inputs - base-branch, target-branch, working-directory');
+
     //Use validateBranchName to validate branch name:
     if (!validateBranchName({ branchName: baseBranch })) {
         // Set the action as failed (action will be stopped), log an error message and return:
@@ -66,10 +101,13 @@ async function run() {
         return;
     }
 
-    // Print to console:
-    core.info(`[js-dependency-update] : base branch is ${baseBranch}`)
-    core.info(`[js-dependency-update] : target branch is ${targetBranch}`)
-    core.info(`[js-dependency-update] : working directory is ${workingDir}`)
+    // Print to console using the logger:
+    logger.debug(`base branch is ${baseBranch}`);
+    logger.debug(`target branch is ${targetBranch}`);
+    logger.debug(`working directory is ${workingDir}`);
+
+
+    logger.debug(`Checking for package updates`);
 
     // Will execute the npm update command within the working directory:
     await exec.exec('npm update', [], {
@@ -86,12 +124,14 @@ async function run() {
 
     if (gitStatus.stdout.length > 0) {
         
-        core.info('[js-dependency-update] : There are updates available');
+        logger.debug('There are updates available');
+        logger.debug('Setting up git');
         
-        // This for indicating that the commit had been performed by our GH automation:
-        await exec.exec(`git config --global user.name "gh-automation"`);
-        await exec.exec(`git config --global user.email "gh-automation@email.com"`);
+        // This for indicating that the commit had been performed by our GH automation by
+        // calling the following function (defined above - C101):
+        await setupGit();
         
+        logger.debug('Commiting and Pushing package changes');
         // Create and Checkout the target branch to which we will commit the changes:
         await exec.exec(`git checkout -b ${targetBranch}`, [], {
             ...commonExecOpts
@@ -114,15 +154,17 @@ async function run() {
             ...commonExecOpts
         });
 
-        
+         logger.debug('Fetching Octokit API');
         // Declare octokit instance and pass the tocken:
         const octokit = github.getOctokit(ghToken) 
 
         try{
 
+             logger.debug(`Creating PR using target branch ${ targetBranch }`);
+
              // Create the pull request: 
             
-             await octokit.rest.pulls.create({
+            await octokit.rest.pulls.create({
                 
                 owner: github.context.repo.owner,
                 repo: github.context.repo.repo,
@@ -135,25 +177,20 @@ async function run() {
 
         } catch (e) {
 
-            core.error('[js-dependency-update] : Something went wrong while creating the PR. Check logs below.');
-            core.error(e.message);
+            logger.error('Something went wrong while creating the PR. Check logs below.');
+            logger.error(e.message);
             core.setFailed(e);
 
         }
 
 
     } else {
-        core.info('[js-dependency-update] : No updates at this point in time')
+        logger.info('No updates at this point in time')
     }
 
 
 
-    
-     core.info('I am  a JS Action')
-
-
 }
 
-run()
 
 
