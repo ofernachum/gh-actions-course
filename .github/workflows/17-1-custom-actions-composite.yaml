@@ -44,6 +44,12 @@ jobs:
                 # Takes the target invironment to determin if to install Dev dependencies:
                 target-env: ${{ inputs.target-env }}
 
+            - name: Print setup deps output
+              # Using the output from the previous custom actions:
+              run: |
+                  echo "Installed Dependencies: ${{ steps.setup-deps.outputs.installed-deps }}"
+
+            
             - name: Test
               run: npm run test
               

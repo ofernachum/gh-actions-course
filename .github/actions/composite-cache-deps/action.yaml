@@ -17,6 +17,23 @@ inputs:
     description: Controlles wheather dev deps are installed
     default: dev
     required: false
+
+
+outputs:
+  installed-deps:
+    description: Whether depemdencies were installed or not
+    # Values can be taken from other job steps.
+    # Here we pass as output the cache-hit from the Cache Dependencies step.
+    value: ${{ steps.cache.outputs.cache-hit != 'true' }} # Will return true if cache was not hit and caching operation actually took place !
+  
+  # Taking output from a below step (C29)
+  randum-output:
+    description: Just a random output
+    value: ${{ steps.randum-output.outputs.random }}
+
+
+
+
 # This holds the custom action's steps:
 runs:
   # This define the type of custom action:
@@ -50,6 +67,14 @@ runs:
       # Required to indicate a shell and working dir when running a step in composite custom action:
       shell: bash
       working-directory: ${{ inputs.working-dir }}
+
+    # Passing a random value to custom action outputs (C29) ...
+    - name: Randum Output
+      shell: bash
+      id: randum-output
+
+      # Append the key and value we want to reference to $GITHUB_OUTPUT file ...
+      run: echo "random=123" >> "$GITHUB_OUTPUT"
 
   
 
