@@ -1,0 +1,52 @@
+name: 18 - 1 - Reusable Workflows - Reusable Defenition
+
+on:
+    workflow_call: # This makes this workflow Reusable (S1)
+        inputs:
+            target-directory:
+                type: string
+                required: true
+        
+        # Reusable Workflow output should come from Job level outputs below: (S3.1)
+        outputs:
+            build-status:
+                description: The status of the build process
+                value: ${{ jobs.deploy.outputs.build-status }} # This now reference the Job Level output (S3.4)
+
+            url:
+                description: The url of the deployed version
+                value: ${{ jobs.deploy.outputs.url }}
+            
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+        outputs:
+            build-status: ${{ steps.build.outputs.build-status }} # This references the build step output (S3.2)
+            url: ${{ steps.deploy.outputs.url }}
+
+        steps:
+            - name: Checkout repo
+              uses: actions/checkout@v4 # This will checkout the repository of the CALLING workflow (S2)
+
+            - name: Build
+              id: build
+              # Generates an output through $GITHUB_OUTPUT (S3.3):
+              run: |
+                echo "Building using directory ${{ inputs.target-directory }}"
+                echo "build-status=success" >> "$GITHUB_OUTPUT" 
+
+            - name: Deploy
+              id: deploy
+              run: |
+                echo "Deploying build artifacts" 
+                echo "url=https://www.google.com" >> "$GITHUB_OUTPUT"
+
+
+
+
+
+
+
+
+

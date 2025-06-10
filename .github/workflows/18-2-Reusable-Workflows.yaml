@@ -1,0 +1,25 @@
+name: 18 - 2 - Reusable Workflows
+
+on:
+    workflow_dispatch
+
+jobs:
+    deploy:
+        uses: ./.github/workflows/18-1-Reusable-Workflow.yaml
+        with:
+            target-directory: dummy-dir
+
+    print-outputs:
+        needs: deploy
+        runs-on: ubuntu-latest
+        steps:
+            # Reference the output from the reusable workflow:
+            - name: Print Outputs
+              run: |
+                echo "Build status: ${{ needs.deploy.outputs.build-status }}" 
+                echo "URL: ${{ needs.deploy.outputs.url }}" 
+
+
+
+
+
