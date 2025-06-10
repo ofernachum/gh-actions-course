@@ -4,6 +4,8 @@ on:
     workflow_dispatch
 
 jobs:
+    # This Job uses the reusable workflow in the path.
+    # I takes an input as defined.
     deploy:
         uses: ./.github/workflows/18-1-Reusable-Workflow.yaml
         with:
@@ -14,6 +16,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             # Reference the output from the reusable workflow:
+            # Note the 'needs' requesred to point to output from dependant job ...
             - name: Print Outputs
               run: |
                 echo "Build status: ${{ needs.deploy.outputs.build-status }}" 
