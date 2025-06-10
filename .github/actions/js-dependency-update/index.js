@@ -127,10 +127,20 @@ async function run() {
         ...commonExecOpts
     });
 
-    // If the output of the previous command is grater than 0 it means there are updates available nad
-    // initiate the PR logic:
+    
 
+    // Setting output to false by defalt (no updates)
+    let updatesAvailable = false; 
+
+
+    // If the output of the previous command is grater than 0 it means there are updates available and
+    // initiate the PR logic:
     if (gitStatus.stdout.length > 0) {
+        
+        // Set Output to true if there are updates availabel
+        // This variable is used at the end of this run function to generate the Output (C209)
+        updatesAvailable = true;
+
         
         logger.debug('There are updates available');
         logger.debug('Setting up git');
@@ -199,7 +209,10 @@ async function run() {
         logger.info('No updates at this point in time')
     }
 
-
+    // Setting Action Output to indicate if updates are available. (C209)
+    // The name of the Output should match the Output in action.yaml
+    logger.debug(`Setting updates-available output to true ${updatesAvailable}`)
+    core.setOutput('updates-available', updatesAvailable);
 
 }
 

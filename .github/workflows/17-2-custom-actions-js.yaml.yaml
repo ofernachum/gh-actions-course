@@ -40,6 +40,9 @@ jobs:
               uses: actions/checkout@v4
             
             - name: Check for Dependency Updates
+              
+              id: updtae-deps
+            
               # Relative path to the custom action folder:
               uses: ./.github/actions/js-dependency-update
               # Pass the Inputs to the custom action
@@ -52,6 +55,11 @@ jobs:
                 # JS_ACTION_TOKEN is a GH Actions Variable (Secret) holding a PAT with write permissions to the repo.
                 # See The corresponding Google Doc for instructions how to create this.
                 gh-token: ${{ secrets.GITHUB_TOKEN }}
+            
+            # Accessing the Output from the previous step running the JS custom action:
+            - name: Print custom action putput
+              run: |
+                echo "Updates Available: ${{ steps.updtae-deps.outputs.apdates-available }}"
 
 
               
