@@ -41,7 +41,7 @@ jobs:
             
             - name: Check for Dependency Updates
               
-              id: updtae-deps
+              id: update-deps
             
               # Relative path to the custom action folder:
               uses: ./.github/actions/js-dependency-update
