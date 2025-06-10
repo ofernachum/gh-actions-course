@@ -59,7 +59,7 @@ jobs:
             # Accessing the Output from the previous step running the JS custom action:
             - name: Print custom action putput
               run: |
-                echo "Updates Available: ${{ steps.update-deps.outputs.apdates-available }}"
+                echo "Updates Available: ${{ steps.update-deps.outputs.updates-available }}"
 
 
               
