@@ -32,6 +32,7 @@ jobs:
               uses: actions/checkout@v4
             
             - name: Ping URL
+              id: ping-url
               # Relative path to the custom action folder:
               uses: ./.github/actions/docker-ping-url
 
@@ -40,6 +41,10 @@ jobs:
                 url: ${{ inputs.url }}
                 max_trails: ${{ inputs.max_trails }}
                 delay: ${{ inputs.delay }}
+
+            - name: URL Reachable
+              run: |
+                echo "URL Reachable: ${{ steps.ping-url.outputs.url-reachable }}"
 
                 
 
